@@ -1,0 +1,5 @@
+-DSBH_IMPLEMENTATION
+-std=gnu99
+-Wall
+-Wextra
+-Werr
