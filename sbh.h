@@ -48,6 +48,11 @@ sbh_opt_static sbh_int_m strb_sprintf( strb_t *builder,
                                        const sbh_char_m *format, ... );
 sbh_opt_static sbh_int_m strb_append( strb_t *builder,
                                       const sbh_char_m *string );
+sbh_opt_static sbh_int_m strb_strb_append( strb_t *builder,
+                                           const strb_t *append_builder );
+sbh_opt_static sbh_int_m strb_scanf( strb_t *builder, const sbh_char_m *format,
+                                     ... );
+sbh_opt_static strb_t *strb_strbdup( strb_t *builder );
 
 sbh_opt_static void strb_reset( strb_t *builder );
 sbh_opt_static void strb_rewind( strb_t *builder );
@@ -209,7 +214,25 @@ sbh_opt_static sbh_int_m strb_append( strb_t *builder,
 
   builder->string_len += len;
 
-  return 0;
+  return len;
+}
+
+sbh_opt_static sbh_int_m strb_strb_append( strb_t *builder,
+                                           const strb_t *append_builder ) {
+  return strb_append( builder, append_builder->string );
+}
+
+sbh_opt_static sbh_int_m strb_scanf( strb_t *builder, const sbh_char_m *format,
+                                     ... ) {
+  va_list va_arg;
+
+  va_start( va_arg, format );
+
+  sbh_int_m result = vsscanf( builder->string, format, va_arg );
+
+  va_end( va_arg );
+
+  return result;
 }
 
 sbh_opt_static void strb_reset( strb_t *builder ) {
@@ -228,6 +251,11 @@ sbh_opt_static void strb_destroy( strb_t *builder ) {
   strb_reset( builder );
   sbh_free( builder->string );
   sbh_free( builder );
+}
+
+sbh_opt_static strb_t *strb_strbdup( strb_t *builder ) {
+  strb_t *new_builder = strb_init( builder->string );
+  return new_builder;
 }
 
 sbh_opt_static const sbh_char_m *strb_to_arr( strb_t *builder ) {
