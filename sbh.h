@@ -127,38 +127,10 @@ struct _Strb {
   uint8_t pad[ 4 ];
 };
 
-sbh_opt_static strb_t *strb_init( const sbh_char_m *init_string ) {
-  strb_t *builder = sbh_alloc( sizeof( strb_t ) );
-  if ( builder == sbh_null ) {
-    return sbh_null;
-  }
-
-  sbh_memset( builder, 0, sizeof( strb_t ) );
-  if ( init_string != sbh_null ) {
-    sbh_size_m len = sbh_strlen( init_string );
-    builder->alloc_size = SBH_INIT_CAPACITY;
-
-    while ( builder->alloc_size < len ) {
-      builder->alloc_size *= 2;
-    }
-
-    builder->string = sbh_alloc( builder->alloc_size );
-    builder->string_len = len;
-    sbh_strcpy( builder->string, init_string );
-
-  } else {
-    builder->string = sbh_alloc( SBH_INIT_CAPACITY );
-    builder->alloc_size = SBH_INIT_CAPACITY;
-    builder->string_len = 0;
-  }
-
-  return builder;
-}
-
 static sbh_int_m strb_grow( strb_t *builder, sbh_size_m appended_len ) {
   sbh_size_m alloc_size = builder->alloc_size;
   while ( builder->string_len + appended_len >= alloc_size ) {
-    alloc_size *= 2;
+    alloc_size *= SBH_GROW_FACTOR;
   }
 
   if ( alloc_size == builder->alloc_size ) {
@@ -174,6 +146,27 @@ static sbh_int_m strb_grow( strb_t *builder, sbh_size_m appended_len ) {
   builder->string = tmp;
   builder->alloc_size = alloc_size;
   return 0;
+}
+
+sbh_opt_static strb_t *strb_init( const sbh_char_m *init_string ) {
+  strb_t *builder = sbh_alloc( sizeof( strb_t ) );
+  if ( builder == sbh_null ) {
+    return sbh_null;
+  }
+
+  sbh_memset( builder, 0, sizeof( strb_t ) );
+  if ( init_string != sbh_null ) {
+    sbh_size_m len = sbh_strlen( init_string );
+    strb_grow( builder, len );
+    sbh_strcpy( builder->string, init_string );
+
+  } else {
+    builder->string = sbh_alloc( SBH_INIT_CAPACITY );
+    builder->alloc_size = SBH_INIT_CAPACITY;
+    builder->string_len = 0;
+  }
+
+  return builder;
 }
 
 sbh_opt_static sbh_int_m strb_sprintf( strb_t *builder,
