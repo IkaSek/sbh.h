@@ -22,23 +22,23 @@
 #include <stdio.h>
 
 #ifndef sbh_char_m
-#define sbh_char_m char
+#  define sbh_char_m char
 #endif
 
 #ifndef sbh_int_m
-#include <stdint.h>
-#define sbh_int_m int32_t
+#  include <stdint.h>
+#  define sbh_int_m int32_t
 #endif
 
 #ifndef sbh_size_m
-#include <stddef.h>
-#define sbh_size_m size_t
+#  include <stddef.h>
+#  define sbh_size_m size_t
 #endif
 
 #ifdef SBH_USE_STATIC
-#define sbh_opt_static static
+#  define sbh_opt_static static
 #else
-#define sbh_opt_static
+#  define sbh_opt_static
 #endif
 
 typedef struct _Strb strb_t;
@@ -63,61 +63,61 @@ sbh_opt_static sbh_size_m strb_strlen( strb_t *builder );
 
 #ifdef SBH_IMPLEMENTATION
 
-#if defined( __GNUC__ ) || __STDC_VERSION__ >= 202312UL
-#define sbh_static_assert _Static_assert
-#else
-#define sbh_static_assert( a, b )
-#endif
+#  if defined( __GNUC__ ) || __STDC_VERSION__ >= 202312UL
+#    define sbh_static_assert _Static_assert
+#  else
+#    define sbh_static_assert( a, b )
+#  endif
 
-#ifndef SBH_INIT_CAPACITY
-#define SBH_INIT_CAPACITY 4096
-#endif
+#  ifndef SBH_INIT_CAPACITY
+#    define SBH_INIT_CAPACITY 4096
+#  endif
 
 sbh_static_assert( ( SBH_INIT_CAPACITY > 0 ) &&
                        ( ( SBH_INIT_CAPACITY & ( SBH_INIT_CAPACITY - 1 ) ) ==
                          0 ),
                    "SBH_INIT_CAPACITY is not a power of two" );
 
-#ifndef SBH_GROW_FACTOR
-#define SBH_GROW_FACTOR 2
-#endif
+#  ifndef SBH_GROW_FACTOR
+#    define SBH_GROW_FACTOR 2
+#  endif
 
-#ifndef sbh_null
-#include <stddef.h>
-#define sbh_null NULL
-#endif
+#  ifndef sbh_null
+#    include <stddef.h>
+#    define sbh_null NULL
+#  endif
 
-#ifndef sbh_alloc
-#include <stdlib.h>
-#define sbh_alloc( len ) malloc( len )
-#endif
+#  ifndef sbh_alloc
+#    include <stdlib.h>
+#    define sbh_alloc( len ) malloc( len )
+#  endif
 
-#ifndef sbh_free
-#include <stdlib.h>
-#define sbh_free( ptr ) free( ptr )
-#endif
+#  ifndef sbh_free
+#    include <stdlib.h>
+#    define sbh_free( ptr ) free( ptr )
+#  endif
 
-#ifndef sbh_realloc
-#include <stdlib.h>
-#define sbh_realloc( ptr, len ) realloc( ptr, len )
-#endif
+#  ifndef sbh_realloc
+#    include <stdlib.h>
+#    define sbh_realloc( ptr, len ) realloc( ptr, len )
+#  endif
 
-#ifndef sbh_strlen
-#include <string.h>
-#define sbh_strlen( str ) strlen( str )
-#endif
+#  ifndef sbh_strlen
+#    include <string.h>
+#    define sbh_strlen( str ) strlen( str )
+#  endif
 
-#ifndef sbh_strcpy
-#include <string.h>
-#define sbh_strcpy( dest, src ) strcpy( dest, src )
-#endif
+#  ifndef sbh_strcpy
+#    include <string.h>
+#    define sbh_strcpy( dest, src ) strcpy( dest, src )
+#  endif
 
-#ifndef sbh_memset
-#include <string.h>
-#define sbh_memset( ptr, data, len ) memset( ptr, data, len )
-#endif
+#  ifndef sbh_memset
+#    include <string.h>
+#    define sbh_memset( ptr, data, len ) memset( ptr, data, len )
+#  endif
 
-#include <stdint.h>
+#  include <stdint.h>
 
 struct _Strb {
   sbh_char_m *string;
@@ -171,7 +171,7 @@ sbh_opt_static strb_t *strb_init( const sbh_char_m *init_string ) {
 
 sbh_opt_static sbh_int_m strb_sprintf( strb_t *builder,
                                        const sbh_char_m *format, ... ) {
-#include <stddef.h>
+#  include <stddef.h>
 
   char *off = builder->string + builder->string_len;
   va_list va_arg;
