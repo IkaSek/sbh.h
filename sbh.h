@@ -133,10 +133,6 @@ static sbh_int_m strb_grow( strb_t *builder, sbh_size_m appended_len ) {
     alloc_size *= SBH_GROW_FACTOR;
   }
 
-  if ( alloc_size == builder->alloc_size ) {
-    return 0;
-  }
-
   sbh_char_m *tmp;
   tmp = sbh_realloc( builder->string, alloc_size );
   if ( tmp == sbh_null ) {
@@ -155,10 +151,12 @@ sbh_opt_static strb_t *strb_init( const sbh_char_m *init_string ) {
   }
 
   sbh_memset( builder, 0, sizeof( strb_t ) );
+  builder->alloc_size = SBH_INIT_CAPACITY;
   if ( init_string != sbh_null ) {
     sbh_size_m len = sbh_strlen( init_string );
     strb_grow( builder, len );
     sbh_strcpy( builder->string, init_string );
+    builder->string_len = len;
 
   } else {
     builder->string = sbh_alloc( SBH_INIT_CAPACITY );
